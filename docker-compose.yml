@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8085:8085"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/swb_db
+      - SPRING_DATASOURCE_USERNAME=swb_user
+      - SPRING_DATASOURCE_PASSWORD=swb_secure_password
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: swb-postgres
+    environment:
+      POSTGRES_DB: swb_db
+      POSTGRES_USER: swb_user
+      POSTGRES_PASSWORD: swb_secure_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
